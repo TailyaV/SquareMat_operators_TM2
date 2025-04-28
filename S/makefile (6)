@@ -1,0 +1,43 @@
+#taliyarial1@gmail.com
+CXX = g++
+CXXFLAGS = -std=c++2a -Wall -Wextra -g
+RM = rm -f
+
+# Default target: build the 'prog' executable
+all: prog
+
+# 'Main' target: run the 'main' executable
+Main: main
+	./main
+
+# 'test' target: run the 'Test' executable used for running tests.
+test: Test
+	./Test
+
+# Build 'main' from 'main.cpp' and object files
+main: main.cpp SquareMat.o
+	$(CXX) $(CXXFLAGS) main.cpp SquareMat.o -o main
+
+# Build 'Test' from 'Test.cpp' and object files
+Test: Test.cpp SquareMat.o
+	$(CXX) $(CXXFLAGS) Test.cpp SquareMat.o -o Test
+
+# Build 'prog' from object files
+prog: main.o SquareMat.o
+	$(CXX) $(CXXFLAGS) main.o SquareMat.o -o prog
+
+# Compile 'main.o' from 'main.cpp'
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) -c main.cpp
+
+# Compile 'SquareMat.o' from 'SquareMat.cpp'
+SquareMat.o: SquareMat.cpp
+	$(CXX) $(CXXFLAGS) -c SquareMat.cpp
+
+# 'valgrind' target: run the program with valgrind for memory leak checking
+valgrind: prog
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./prog
+
+# Clean target: remove all generated files object files and executables
+clean:
+	$(RM) main.o SquareMat.o prog main Test
